@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/myblog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/myblog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/myblog/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/myblog/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/myblog/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/myblog/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/myblog/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="redis," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="学习，redis命令参考 redis 数据类型 redis有五种数据类型：string(字符串)，hash(哈希),list(列表),set(集合),zset(有序集合)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis">
+<meta property="og:url" content="http://zhang_stalin.gitee.io/myblog/2020/03/10/redis/index.html">
+<meta property="og:site_name" content="尘埃.散尽">
+<meta property="og:description" content="学习，redis命令参考 redis 数据类型 redis有五种数据类型：string(字符串)，hash(哈希),list(列表),set(集合),zset(有序集合)">
+<meta property="article:published_time" content="2020-03-10T14:43:44.000Z">
+<meta property="article:modified_time" content="2020-03-13T09:38:35.075Z">
+<meta property="article:author" content="尘埃">
+<meta property="article:tag" content="redis">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/myblog/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://zhang_stalin.gitee.io/myblog/2020/03/10/redis/"/>
+
+
+
+
+
+  <title>redis | 尘埃.散尽</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/myblog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">尘埃.散尽</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/myblog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/myblog/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/myblog/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/myblog/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/myblog/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://zhang_stalin.gitee.io/myblog/myblog/2020/03/10/redis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="尘埃">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/myblog/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="尘埃.散尽">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">redis</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-10T22:43:44+08:00">
+                2020-03-10
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-03-13T17:38:35+08:00">
+                2020-03-13
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/myblog/categories/Redis/" itemprop="url" rel="index">
+                    <span itemprop="name">Redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/myblog/2020/03/10/redis/" class="leancloud_visitors" data-flag-title="redis">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="http://doc.redisfans.com/" target="_blank" rel="noopener">学习</a>，<a href="http://redisdoc.com/" target="_blank" rel="noopener">redis命令参考</a></p>
+<p>redis 数据类型</p>
+<p>redis有五种数据类型：string(字符串)，hash(哈希),list(列表),set(集合),zset(有序集合)</p>
+<a id="more"></a>
+
+<p>string类型：是简单的key-value键值对，如果key存在，则会覆盖原来的值</p>
+<ul>
+<li><strong><code>EX second</code> ：设置键的过期时间为 <code>second</code> 秒。 <code>SET key value EX second</code> 效果等同于 <code>SETEX key second value</code> 。</strong></li>
+<li><strong><code>PX millisecond</code> ：设置键的过期时间为 <code>millisecond</code> 毫秒。 <code>SET key value PX millisecond</code> 效果等同于 <code>PSETEX key millisecond value</code> 。</strong></li>
+<li><strong><code>NX</code> ：只在键不存在时，才对键进行设置操作。 <code>SET key value NX</code> 效果等同于 <code>SETNX key value</code> 。</strong></li>
+<li><strong><code>XX</code> ：只在键已经存在时，才对键进行设置操作。</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">string 命令操作：</span><br><span class="line">set key value					-&gt; 设置key-value</span><br><span class="line">get key 					-&gt; 获取value值</span><br><span class="line">set key value EX expire 			-&gt; 将值 value 关联到 key ，并将 key 的生存时间设为 seconds (以秒为单位)，如果 key 已经存在， SETEX 命令将覆写旧值</span><br><span class="line">ttl key 					-&gt; 查看key的过期时间</span><br><span class="line">set key value PX expire				-&gt; 设置key-value的过期时间（毫秒）</span><br><span class="line">set key value NX				-&gt; 将 key 的值设为 value ，当且仅当 key 不存在，若给定的 key 已经存在，则 SETNX 不做任何动作</span><br><span class="line">setrange key offset				-&gt; 用 value 参数覆写(overwrite)给定 key 所储存的字符串值，从偏移量 offset 开始，不存在的 key 当作空白字符串处理，如果原有的value长度大于offset值时，原字符与偏移量之间的空白将用零字节来填充</span><br><span class="line">----------------</span><br><span class="line">append key value				-&gt; 如果key存在并且原value是字符串形式，将新value追加到原value值后面，如果key不存在，则为key设定value值</span><br><span class="line">getset key value				-&gt; 将给定key值设定value，并返回key原有的value值</span><br><span class="line">decr key					-&gt; 将key中存储的数字值value减一，如果key不存在那value会先被初始化为0然后再进行减一操作</span><br><span class="line">decrby key num					-&gt; 将key中存储的数据值减去减量num，如果key不存在那value会先被初始化为0然后再进行减量num操作 </span><br><span class="line">incr key 					-&gt; 将key中存储的数字值value加一，如果key不存在那value会先被初始化为0然后再进行加一操作</span><br><span class="line">incrby key num 					-&gt; 将key中存储的数据值减去加量num，如果key不存在那value会先被初始化为0然后再进行加量num操作</span><br><span class="line">getrange key start end				-&gt; 返回 key 中字符串值的子字符串，字符串的截取范围由 start 和 end 两个偏移量决定(包括 start 和 end 在内)，负数偏移量表示从字符串最后开始计数， -1 表示最后一个字符， -2 表示倒数第二个，以此类推</span><br><span class="line">mset key value 					-&gt; 支持同时设置一个或多个 key-value对，某个给定 key 已经存在，那么 MSET 会用新值覆盖原来的旧值,其返回值总是ok</span><br><span class="line">msetnx key value 				-&gt; 同时设置一个或多个 key-value 对，当且仅当所有给定 key 都不存在,即使只有一个给定 key 已存在， MSETNX 也会拒绝执行所有给定 key 的设置操作</span><br><span class="line">mget keys 					-&gt; 返回所有(一个或多个)给定 key 的值</span><br><span class="line">strlen key 					-&gt; 返回 key 所储存的字符串值的长度，当 key 储存的不是字符串值时，返回一个错误</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">key 命令操作：</span><br><span class="line">del keys 					-&gt; 删除给定的一个或多个key，不存在的 key 会被忽略。返回被删除 key的数量</span><br><span class="line">exists key					-&gt; 检查给定 key 是否存在，若 key 存在，返回 1 ，否则返回 0</span><br><span class="line">expire key seconds 				-&gt; 为给定 key 设置生存时间，当 key 过期时(生存时间为 0 )，它会被自动删除，设置成功返回 1，当 key 不存在或者不能为 key 设置生存时间时返回 0 </span><br><span class="line">expireat key timestamp				-&gt; 为给定 key 设置生存时间,可接受时间戳，设置成功返回1，key不存在或没办法设置生存时间返回0</span><br><span class="line">keys *						-&gt; 查找所有符合给定模式 pattern 的 key </span><br><span class="line">rename key newkey				-&gt; 将 key 改名为 newkey，当 key 和 newkey 相同，或者 key 不存在时，返回一个错误，当 newkey 已经存在时， RENAME 命令将覆盖旧值，改名成功时提示 OK ，失败时候返回一个错误</span><br><span class="line">renamenx key newkey				-&gt; 当且仅当 newkey 不存在时，将 key 改名为 newkey，当 key 不存在时，返回一个错误，修改成功时，返回 1，如果 newkey 已经存在，返回 0</span><br><span class="line">sort key&#x2F;sort key desc				-&gt; 返回或保存给定列表、集合、有序集合 key 中经过排序的元素，排序默认以数字作为对象，值被解释为双精度浮点数，然后进行比较</span><br><span class="line">ttl key 					-&gt; 以秒为单位，返回给定 key 的剩余生存时间，当 key 不存在时，返回 -2 ，当 key 存在但没有设置剩余生存时间时，返回 -1，否则，以秒为单位，返回 key 的剩余生存时间</span><br><span class="line">type 						-&gt; 返回 key 所储存的值的类型</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">hash 命令操作:</span><br><span class="line">HDEL KEY N 					-&gt; 删除哈希表 key 中的一个或多个指定域，不存在的域将被忽略，返回被成功移除的域的数量，不包括被忽略的域</span><br><span class="line">HEXISTS KEY field				-&gt; 查看哈希表 key 中，给定域 field 是否存在，如果哈希表含有给定域，返回 1，如果哈希表不含有给定域，或 key 不存在，返回 0</span><br><span class="line">HGET KEY field					-&gt; 返回哈希表 key 中给定域 field 的值，返回给定域的值，当给定域不存在或是给定 key 不存在时，返回 nil </span><br><span class="line">HGETALL KEY 					-&gt; 返回哈希表 key 中，所有的域和值，以列表形式返回哈希表的域和域的值，若 key 不存在，返回空列表</span><br><span class="line">HINCRBY KEY field increment			-&gt; 为哈希表 key 中的域 field 的值加上增量 increment ，若key不存在就创建一个新的哈希表并执行HINCRBY操作，若key不存在则field先被初始化为0再执行HINCRBY操作，返回哈希表 key 中域 field 的值</span><br><span class="line">HKEYS						-&gt; 返回哈希表 key 中的所有域，返回一个包含哈希表中所有域的表，当 key 不存在时，返回一个空表</span><br><span class="line">HLEN KEY					-&gt; 返回哈希表 key 中域的数量，若key不存在则返回0</span><br><span class="line">HMGET KEY fields				-&gt; 返回哈希表 key 中，一个或多个给定域的值，如果给定的域不存在于哈希表，那么返回一个 nil 值，返回一个包含多个给定域的关联值的表，表值的排列顺序和给定域参数的请求顺序一样</span><br><span class="line">HMSET KEY field value				-&gt; 同时将多个 field-value (域-值)对设置到哈希表 key 中，若key存在则覆盖，若不存在则新建一个空的哈希表并执行HMSET操作</span><br><span class="line">HMSETNX	KEY field value				-&gt; 将哈希表 key 中的域 field 的值设置为 value ，当且仅当域 field 不存在，若域 field 已经存在，该操作无效，若不存在则新建一个空的哈希表并执行HMSETNX操作，设置成功，返回 1，如果给定域已经存在且没有操作被执行，返回 0</span><br><span class="line">HVALS KEY 					-&gt; 返回哈希表 key 中所有域的值，一个包含哈希表中所有值的表。当 key 不存在时，返回一个空表</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">list 命令操作：</span><br><span class="line">LINDEX KEY index 				-&gt; 返回列表 key 中，下标为 index 的元素，使用负数下标时表示从最后元素开始查找</span><br><span class="line">LINSERT KEY BEFORE|AFFTER pivot value 		-&gt; 将值 value 插入到列表 key 当中，位于值 pivot 之前或之后，当 pivot 不存在于列表 key 时，不执行任何操作，当 key 不存在时， key 被视为空列表，不执行任何操作，如果 key 不是列表类型，返回一个错误</span><br><span class="line">LLEN KEY 					-&gt; 返回列表 key 的长度，如果 key 不存在，则 key 被解释为一个空列表，返回 0，如果 key 不是列表类型，返回一个错误</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    尘埃
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://zhang_stalin.gitee.io/myblog/2020/03/10/redis/" title="redis">http://zhang_stalin.gitee.io/myblog/2020/03/10/redis/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/myblog/tags/redis/" rel="tag"># redis</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/myblog/2020/03/06/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/myblog/2020/03/13/Golang-%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%9E%E6%8E%A5/" rel="prev" title="Golang 数据库连接">
+                Golang 数据库连接 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/myblog/images/avatar.jpeg"
+                alt="尘埃" />
+            
+              <p class="site-author-name" itemprop="name">尘埃</p>
+              <p class="site-description motion-element" itemprop="description">Golang</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/myblog/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/myblog/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/myblog/tags/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/1684063515" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.cnblogs.com/chunlinzhang" target="_blank" title="博客园">
+                      
+                        <i class="fa fa-fw fa-futbol-o"></i>博客园</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="1684063515" target="_blank" title="QQ">
+                      
+                        <i class="fa fa-fw fa-qq"></i>QQ</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:1684063515@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">尘埃</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/myblog/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/myblog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/myblog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/myblog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/myblog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/myblog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/myblog/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/myblog/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/myblog/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/myblog/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/myblog/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/myblog/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/myblog/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("", "");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
